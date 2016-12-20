@@ -1,6 +1,7 @@
 const {
     app,
     Menu,
+    Tray,
     ipcMain,
     BrowserWindow
 } = require('electron');
@@ -76,14 +77,36 @@ function createWindow () {
                     accelerator: 'CmdOrCtrl+Q',
                     click: () => {
                         app.quit();
+                    }
                 }
-            }
             ]
         }
     ];
 
-    // const menu = Menu.buildFromTemplate(menuTemplate);
     Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate));
+    let trayIcon = new Tray('assets/icon_small.png');
+
+    var trayMenuTemplate = [
+        {
+            label: 'Slime Buddy',
+            enabled: false
+        }, {
+            label: 'About',
+            click: function () {
+                console.log('About Clicked');
+            }
+        }, {
+            type: 'separator'
+        }, {
+            label: 'Quit',
+            accelerator: 'CmdOrCtrl+Q',
+            click: () => {
+                app.quit();
+            }
+        }
+    ];
+    var trayMenu = Menu.buildFromTemplate(trayMenuTemplate);
+    trayIcon.setContextMenu(trayMenu);
 
     mainWindow.once('ready-to-show', () => {
       mainWindow.show()

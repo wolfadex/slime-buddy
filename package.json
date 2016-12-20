@@ -5,7 +5,8 @@
   "description": "A little slime buddy",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-packager ../slime-buddy SlimeBuddy --all --version=0.30.2 --out=~/Desktop/SlimeBuddyBuild --overwrite"
   },
   "keywords": [
     "slime",
@@ -14,7 +15,8 @@
   ],
   "author": "Wolfgang Schuster",
   "devDependencies": {
-    "electron": "^1.4.1"
+    "electron": "^1.4.1",
+    "electron-packager": "^8.4.0"
   },
   "dependencies": {
     "configstore": "^2.1.0"
