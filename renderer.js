@@ -25,6 +25,7 @@ const slimeImages = [
 let stage;
 let slime;
 let stats = ipcRenderer.sendSync('loadSlime');
+const slimeBday = new Date(stats.bday);
 let holidayImages = '';
 
 if (today.getMonth() === 12 && today.getDate() === 25) {
@@ -88,7 +89,7 @@ function init() {
         stats = ipcRenderer.sendSync('resetSlime');
     });
 
-    if (stats.bday.getMonth() === today.getMonth() && stats.bday.getDate() === today.getDate()) {
+    if (slimeBday.getFullYear() < today.getFullYear() && slimeBday.getMonth() === today.getMonth() && slimeBday.getDate() === today.getDate()) {
         loadBitmap('bday');
     }
 
