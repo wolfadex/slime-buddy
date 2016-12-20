@@ -1,37 +1,111 @@
-const electron = require('electron')
-// Module to control application life.
-const app = electron.app
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
-
-const path = require('path')
-const url = require('url')
+const {
+    app,
+    Menu,
+    ipcMain,
+    BrowserWindow
+} = require('electron');
+const Configstore = require('configstore');
+const defaultSlime = {
+    emotion: 'none',
+    awake: true,
+    sleepiness: 100,
+    hunger: 100,
+    happiness: 50,
+    doJump: false,
+    doEat: false,
+    dead: false,
+};
+const defaultSettings = {
+    x: 10,
+    y: 10,
+};
+const conf = new Configstore('slimebuddy', Object.assign({}, defaultSlime, defaultSettings));
+const path = require('path');
+const url = require('url');
+const settings = conf.all;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
+let mainWindow;
+
+
+app.setName('Slime Buddy');
+
+ipcMain.on('saveSlime', (e, data) => {
+  conf.set(Object.assign({}, data, {
+     x: mainWindow.getBounds().x,
+     y: mainWindow.getBounds().y,
+  }));
+  e.returnValue = true;
+});
+ipcMain.on('loadSlime', (e) => {
+    e.returnValue = settings;
+});
+ipcMain.on('resetSlime', (e) => {
+    e.returnValue = Object.assign({}, settings, defaultSlime);
+});
 
 function createWindow () {
-  // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600})
+    // Create the browser window.
+    mainWindow = new BrowserWindow({
+        width: 128,
+        height: 158,
+        alwaysOnTop: true,
+        frame: false,
+        resizable: false,
+        transparent: true,
+        show: false,
+        fullscreenable: false,
+        x: settings.x,
+        y: settings.y,
+    });
 
-  // and load the index.html of the app.
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
+    const menuTemplate = [
+        {
+            label: 'Slime Buddy',
+            submenu: [
+                {
+                    label: 'About ...',
+                    click: () => {
+                        console.log('About Clicked');
+                    }
+                }, {
+                    type: 'separator'
+                }, {
+                    label: 'Quit',
+                    accelerator: 'CmdOrCtrl+Q',
+                    click: () => {
+                        app.quit();
+                }
+            }
+            ]
+        }
+    ];
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+    // const menu = Menu.buildFromTemplate(menuTemplate);
+    Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate));
 
-  // Emitted when the window is closed.
-  mainWindow.on('closed', function () {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null
-  })
+    mainWindow.once('ready-to-show', () => {
+      mainWindow.show()
+    });
+
+    // and load the index.html of the app.
+    mainWindow.loadURL(url.format({
+        pathname: path.join(__dirname, 'index.html'),
+        protocol: 'file:',
+        slashes: true,
+    }));
+
+    // Open the DevTools.
+    // mainWindow.webContents.openDevTools();
+
+    // Emitted when the window is closed.
+    mainWindow.on('closed', () => {
+        // Dereference the window object, usually you would store windows
+        // in an array if your app supports multi windows, this is the time
+        // when you should delete the corresponding element.
+        mainWindow = null;
+    });
 }
 
 // This method will be called when Electron has finished

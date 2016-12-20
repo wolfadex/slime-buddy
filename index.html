@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Hello World!</title>
-  </head>
-  <body>
-    <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using Node.js <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
-  </body>
-
-  <script>
-    // You can also require other files to run in this process
-    require('./renderer.js')
-  </script>
+    <head>
+        <meta charset="UTF-8">
+        <title>Slime Buddy</title>
+        <script src="easeljs-0.8.2.min.js"></script>
+    </head>
+    <body style="margin: 0;">
+        <canvas id="playground" width="128" height="158" style="position: absolute; top: 30px;"></canvas>
+        <div style="-webkit-app-region: drag; background: rgb(232, 230, 36); border-bottom-right-radius: 20px; width: 20px; height: 20px; position: absolute; top: 30px; left: 0; cursor: move;">
+        </div>
+    </body>
+    <script>
+        require('./renderer.js')
+    </script>
 </html>

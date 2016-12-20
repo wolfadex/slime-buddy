@@ -1,22 +1,22 @@
 {
-  "name": "electron-quick-start",
+  "name": "slime-buddy",
+  "productName": "Slime Buddy",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "A little slime buddy",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "slime",
+    "toy",
+    "electron"
   ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "author": "Wolfgang Schuster",
   "devDependencies": {
     "electron": "^1.4.1"
+  },
+  "dependencies": {
+    "configstore": "^2.1.0"
   }
 }
