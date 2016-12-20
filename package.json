@@ -6,7 +6,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager ../slime-buddy SlimeBuddy --all --version=0.30.2 --out=~/Desktop/SlimeBuddyBuild --overwrite"
+    "build": "electron-packager --all --out=builds/SlimeBuddyBuild"
   },
   "keywords": [
     "slime",
