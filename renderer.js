@@ -1,11 +1,41 @@
 const { ipcRenderer } = require('electron');
-var stage,
-    scale = 2,
-    spriteImages = [],
-    slime,
-    stats = ipcRenderer.sendSync('loadSlime'),
-    today = new Date(),
-    isChristmas = today.getMonth() === 12 && today.getDate() === 25 ? '_xmas' : '';
+const scale = 2;
+const today = new Date();
+const slimeImages = [
+    'idle',
+    'angry',
+    'hungry',
+    'happy',
+    'dead',
+    'surprise',
+    'question',
+    'sleep_1',
+    'sleep_2',
+    'jump_1',
+    'jump_2',
+    'jump_3',
+    'jump_4',
+    'jump_5',
+    'jump_6',
+    'eat_1',
+    'eat_2',
+    'eat_3',
+    'eat_4',
+];
+let stage;
+let slime;
+let stats = ipcRenderer.sendSync('loadSlime');
+let holidayImages = '';
+
+if (today.getMonth() === 12 && today.getDate() === 25) {
+    holidayImages = '_xmas';
+}
+else if (today.getMonth() === 10 && today.getDate() === 31) {
+    // holidayImages = '_halloween';
+}
+else if (today.getMonth() === 1 && today.getDate() === 1) {
+    // holidayImages = '_newyear';
+}
 
 function poke() {
     if (!stats.doJump && slime.currentAnimation !== 'jump') {
@@ -29,92 +59,42 @@ function feed() {
     }
 }
 
+function loadBitmap(file, clickAction) {
+    let img = new Image();
+
+    img.src = `assets/${file}.png`;
+    img.onload = (e) => {
+        let bitmap = new createjs.Bitmap(img);
+
+        bitmap.scaleX = scale;
+        bitmap.scaleY = scale;
+
+        if (clickAction != null) {
+            bitmap.on('click', clickAction);
+            bitmap.cursor = 'pointer';
+        }
+
+        stage.addChild(bitmap);
+    };
+}
+
 function init() {
     stage = new createjs.Stage('playground');
     stage.enableMouseOver();
 
-    var groundImg = new Image();
+    loadBitmap(`ground${holidayImages}`);
+    loadBitmap('feed', feed);
+    loadBitmap('new_slime', (e) => {
+        stats = ipcRenderer.sendSync('resetSlime');
+    });
 
-    groundImg.src = `assets/ground${isChristmas}.png`;
-    groundImg.onload = (e) => {
-        var ground = new createjs.Bitmap(groundImg);
+    if (stats.bday.getMonth() === today.getMonth() && stats.bday.getDate() === today.getDate()) {
+        loadBitmap('bday');
+    }
 
-        ground.scaleX = scale;
-        ground.scaleY = scale;
-        stage.addChild(ground);
-    };
-
-    var feedImg = new Image();
-
-    feedImg.src = 'assets/feed.png';
-    feedImg.onload = (e) => {
-        var feedBitmap = new createjs.Bitmap(feedImg);
-
-        feedBitmap.scaleX = scale;
-        feedBitmap.scaleY = scale;
-        feedBitmap.on('click', feed);
-        feedBitmap.cursor = 'pointer';
-        stage.addChild(feedBitmap);
-    };
-
-    var newSlimeImg = new Image();
-
-    newSlimeImg.src = 'assets/new_slime.png';
-    newSlimeImg.onload = (e) => {
-        var newSlimeBitmap = new createjs.Bitmap(newSlimeImg);
-
-        newSlimeBitmap.scaleX = scale;
-        newSlimeBitmap.scaleY = scale;
-        newSlimeBitmap.cursor = 'pointer';
-        newSlimeBitmap.on('click', (e) => {
-            stats = ipcRenderer.sendSync('resetSlime');
-        });
-        stage.addChild(newSlimeBitmap);
-    };
-
-    var spriteSheet = new createjs.SpriteSheet({
-        images: [
-            `assets/idle${isChristmas}.png`,
-            `assets/angry${isChristmas}.png`,
-            `assets/hungry${isChristmas}.png`,
-            `assets/happy${isChristmas}.png`,
-            `assets/dead${isChristmas}.png`,
-            `assets/surprise${isChristmas}.png`,
-            `assets/question${isChristmas}.png`,
-            `assets/sleep_1${isChristmas}.png`,
-            `assets/sleep_2${isChristmas}.png`,
-            `assets/jump_1${isChristmas}.png`,
-            `assets/jump_2${isChristmas}.png`,
-            `assets/jump_3${isChristmas}.png`,
-            `assets/jump_4${isChristmas}.png`,
-            `assets/jump_5${isChristmas}.png`,
-            `assets/jump_6${isChristmas}.png`,
-            `assets/eat_1${isChristmas}.png`,
-            `assets/eat_2${isChristmas}.png`,
-            `assets/eat_3${isChristmas}.png`,
-            `assets/eat_4${isChristmas}.png`,
-        ],
-        frames: [
-            // x, y, width, height, imageIndex*, regX*, regY*
-            [0, 0, 64, 64, 0],
-            [0, 0, 64, 64, 1],
-            [0, 0, 64, 64, 2],
-            [0, 0, 64, 64, 3],
-            [0, 0, 64, 64, 4],
-            [0, 0, 64, 64, 5],
-            [0, 0, 64, 64, 6],
-            [0, 0, 64, 64, 7],
-            [0, 0, 64, 64, 8],
-            [0, 0, 64, 64, 9],
-            [0, 0, 64, 64, 10],
-            [0, 0, 64, 64, 11],
-            [0, 0, 64, 64, 12],
-            [0, 0, 64, 64, 13],
-            [0, 0, 64, 64, 14],
-            [0, 0, 64, 64, 15],
-            [0, 0, 64, 64, 16],
-            [0, 0, 64, 64, 17],
-        ],
+    let spriteSheet = new createjs.SpriteSheet({
+        images: slimeImages.map((img) => `assets/${img}${holidayImages}.png`),
+        frames: slimeImages.map((img, i) => [0, 0, 64, 64, i]),
         animations: {
             idle: [0, 0, true, 1],
             angry: 1,

@@ -8,6 +8,7 @@ const {
 const Configstore = require('configstore');
 const defaultSlime = {
     emotion: 'none',
+    bday: new Date(),
     awake: true,
     sleepiness: 100,
     hunger: 100,
