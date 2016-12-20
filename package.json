@@ -6,7 +6,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager --all --out=builds/SlimeBuddyBuild"
+    "build": "electron-packager ./ SlimeBuddy --all --out ~/Desktop/SlimeBuddy --overwrite --icon=./assets/icon.icns"
   },
   "keywords": [
     "slime",

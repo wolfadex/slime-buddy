@@ -3,7 +3,9 @@ var stage,
     scale = 2,
     spriteImages = [],
     slime,
-    stats = ipcRenderer.sendSync('loadSlime');
+    stats = ipcRenderer.sendSync('loadSlime'),
+    today = new Date(),
+    isChristmas = today.getMonth() === 12 && today.getDate() === 25 ? '_xmas' : '';
 
 function poke() {
     if (!stats.doJump && slime.currentAnimation !== 'jump') {
@@ -33,7 +35,7 @@ function init() {
 
     var groundImg = new Image();
 
-    groundImg.src = 'assets/ground.png';
+    groundImg.src = `assets/ground${isChristmas}.png`;
     groundImg.onload = (e) => {
         var ground = new createjs.Bitmap(groundImg);
 
@@ -44,7 +46,7 @@ function init() {
 
     var feedImg = new Image();
 
-    feedImg.src = 'assets/feed.png';
+    feedImg.src = `assets/feed${isChristmas}.png`;
     feedImg.onload = (e) => {
         var feedBitmap = new createjs.Bitmap(feedImg);
 
@@ -57,7 +59,7 @@ function init() {
 
     var newSlimeImg = new Image();
 
-    newSlimeImg.src = 'assets/new_slime.png';
+    newSlimeImg.src = `assets/new_slime${isChristmas}.png`;
     newSlimeImg.onload = (e) => {
         var newSlimeBitmap = new createjs.Bitmap(newSlimeImg);
 
@@ -72,25 +74,25 @@ function init() {
 
     var spriteSheet = new createjs.SpriteSheet({
         images: [
-            'assets/stare.png',
-            'assets/angry.png',
-            'assets/hungry.png',
-            'assets/happy.png',
-            'assets/dead.png',
-            'assets/surprise.png',
-            'assets/question.png',
-            'assets/sleep_1.png',
-            'assets/sleep_2.png',
-            'assets/jump_1.png',
-            'assets/jump_2.png',
-            'assets/jump_3.png',
-            'assets/jump_4.png',
-            'assets/jump_5.png',
-            'assets/jump_6.png',
-            'assets/eat_1.png',
-            'assets/eat_2.png',
-            'assets/eat_3.png',
-            'assets/eat_4.png',
+            `assets/idle${isChristmas}.png`,
+            `assets/angry${isChristmas}.png`,
+            `assets/hungry${isChristmas}.png`,
+            `assets/happy${isChristmas}.png`,
+            `assets/dead${isChristmas}.png`,
+            `assets/surprise${isChristmas}.png`,
+            `assets/question${isChristmas}.png`,
+            `assets/sleep_1${isChristmas}.png`,
+            `assets/sleep_2${isChristmas}.png`,
+            `assets/jump_1${isChristmas}.png`,
+            `assets/jump_2${isChristmas}.png`,
+            `assets/jump_3${isChristmas}.png`,
+            `assets/jump_4${isChristmas}.png`,
+            `assets/jump_5${isChristmas}.png`,
+            `assets/jump_6${isChristmas}.png`,
+            `assets/eat_1${isChristmas}.png`,
+            `assets/eat_2${isChristmas}.png`,
+            `assets/eat_3${isChristmas}.png`,
+            `assets/eat_4${isChristmas}.png`,
         ],
         frames: [
             // x, y, width, height, imageIndex*, regX*, regY*

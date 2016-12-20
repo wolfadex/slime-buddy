@@ -57,6 +57,7 @@ function createWindow () {
         transparent: true,
         show: false,
         fullscreenable: false,
+        icon: 'assets/icon.png',
         x: settings.x,
         y: settings.y,
     });
