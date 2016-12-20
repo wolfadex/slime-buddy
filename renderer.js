@@ -46,7 +46,7 @@ function init() {
 
     var feedImg = new Image();
 
-    feedImg.src = `assets/feed${isChristmas}.png`;
+    feedImg.src = 'assets/feed.png';
     feedImg.onload = (e) => {
         var feedBitmap = new createjs.Bitmap(feedImg);
 
@@ -59,7 +59,7 @@ function init() {
 
     var newSlimeImg = new Image();
 
-    newSlimeImg.src = `assets/new_slime${isChristmas}.png`;
+    newSlimeImg.src = 'assets/new_slime.png';
     newSlimeImg.onload = (e) => {
         var newSlimeBitmap = new createjs.Bitmap(newSlimeImg);
 

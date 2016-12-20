@@ -53,7 +53,7 @@ function createWindow () {
         height: 158,
         alwaysOnTop: true,
         frame: false,
-        resizable: false,
+        // resizable: false,
         transparent: true,
         show: false,
         fullscreenable: false,
