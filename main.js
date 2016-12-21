@@ -54,7 +54,7 @@ function createWindow () {
         transparent: true,
         show: false,
         fullscreenable: false,
-        icon: 'assets/icon.png',
+        icon: 'assets/icons/icon.png',
         x: settings.x,
         y: settings.y,
     });
@@ -94,7 +94,7 @@ function createWindow () {
     }));
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     mainWindow.on('closed', () => {
         mainWindow = null;

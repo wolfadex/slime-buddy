@@ -1,51 +1,30 @@
 const { ipcRenderer } = require('electron');
 const scale = 2;
 const today = new Date();
-const slimeImages = [
-    'idle',
-    'angry',
-    'hungry',
-    'happy',
-    'dead',
-    'surprise',
-    'question',
-    'sleep_1',
-    'sleep_2',
-    'jump_1',
-    'jump_2',
-    'jump_3',
-    'jump_4',
-    'jump_5',
-    'jump_6',
-    'eat_1',
-    'eat_2',
-    'eat_3',
-    'eat_4',
-];
 let stage;
 let slime;
 let stats = ipcRenderer.sendSync('loadSlime');
 const slimeBday = new Date(stats.bday);
-let holidayImages = '';
+let holidayTheme = 'default';
 
 if (today.getMonth() === 12 && today.getDate() === 25) {
-    holidayImages = '_xmas';
+    holidayTheme = 'xmas';
 }
 else if (today.getMonth() === 10 && today.getDate() === 31) {
-    // holidayImages = '_halloween';
+    // holidayTheme = 'halloween';
 }
 else if (today.getMonth() === 1 && today.getDate() === 1) {
-    // holidayImages = '_newyear';
+    // holidayTheme = 'newyear';
 }
 else if (today.getMonth() === 2 && today.getDate() === 14) {
-    // holidayImages = '_valentines';
+    // holidayTheme = 'valentines';
 }
 else if (today.getMonth() === 7 && today.getDate() === 4) {
-    // holidayImages = '_july4';
+    // holidayTheme = 'july4';
 }
 else if (today.getMonth() === 11 && today.getDate() === 22) {
 	// TODO: Fix date check
-    // holidayImages = '_thanksgiving';
+    // holidayTheme = 'thanksgiving';
 }
 
 function poke() {
@@ -92,30 +71,33 @@ function loadBitmap(file, clickAction) {
 function init() {
     stage = new createjs.Stage('playground');
     stage.enableMouseOver();
-    loadBitmap(`ground${holidayImages}`);
-    loadBitmap('feed', feed);
-    loadBitmap('new_slime', (e) => {
+    loadBitmap(`ground/${holidayTheme}`);
+    loadBitmap('buttons/feed', feed);
+    loadBitmap('buttons/new', (e) => {
         stats = ipcRenderer.sendSync('resetSlime');
     });
 
     if (slimeBday.getFullYear() < today.getFullYear() && slimeBday.getMonth() === today.getMonth() && slimeBday.getDate() === today.getDate()) {
-        loadBitmap('bday');
+        loadBitmap('ground/bday');
     }
 
     let spriteSheet = new createjs.SpriteSheet({
-        images: slimeImages.map((img) => `assets/${img}${holidayImages}.png`),
-        frames: slimeImages.map((img, i) => [0, 0, 64, 64, i]),
+        images: [`assets/slime/${holidayTheme}.png`],
+        frames: {
+            width: 64,
+            height: 64,
+        },
         animations: {
             idle: [0, 0, true, 1],
-            angry: 1,
-            hungry: 2,
-            happy: 3,
-            dead: 4,
-            surprise: [5, 5, 'idle', 0.1],
-            question: [6, 6, 'idle', 0.1],
-            sleep: [7, 8, true, 0.1],
-            jump: [9, 13, 'idle', 0.5],
-            eat: [14, 17, 'idle', 0.5],
+            angry: 21,
+            hungry: 20,
+            happy: 18,
+            dead: 19,
+            surprise: [16, 16, 'idle', 0.1],
+            question: [17, 17, 'idle', 0.1],
+            sleep: [36, 37, true, 0.1],
+            jump: [48, 53, 'idle', 0.5],
+            eat: [32, 35, 'idle', 0.5],
         },
     });
 
