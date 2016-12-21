@@ -76,6 +76,9 @@ function init() {
     loadBitmap('buttons/new', (e) => {
         stats = ipcRenderer.sendSync('resetSlime');
     });
+    loadBitmap('buttons/settings', (e) => {
+        ipcRenderer.sendSync('showSettings');
+    });
 
     if (slimeBday.getFullYear() < today.getFullYear() && slimeBday.getMonth() === today.getMonth() && slimeBday.getDate() === today.getDate()) {
         loadBitmap('ground/bday');

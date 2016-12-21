@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Slime Buddy Settings</title>
+    </head>
+    <style>
+        .hidden {
+            display: none !important;
+        }
+
+        .panel {
+            display: flex;
+            flex-direction: column;
+            margin: 1em;
+        }
+
+        .title {
+            text-align: center;
+            width: 100%;
+        }
+
+        .nav {
+            display: flex;
+        }
+
+        .button {
+            background: none;
+            border-bottom: 1px solid black;
+            border-left: none;
+            border-right: none;
+            border-top: none;
+            cursor: pointer;
+            flex: 1;
+            font-size: 1em;
+            outline: none;
+            padding: 0.5em 1em;
+        }
+
+        .focus {
+            background: rgb(82, 207, 77);
+        }
+
+        .button:hover {
+            background: aquamarine;
+        }
+    </style>
+    <body style="margin: 0;">
+        <nav class="nav">
+            <button
+                id="optionsButton"
+                class="button focus"
+                style="border-right: 1px solid black;">
+                Options
+            </button>
+            <button
+                id="infoButton"
+                class="button"
+                style="border-right: 1px solid black;">
+                Info
+            </button>
+            <button
+                id="creditsButton"
+                class="button"
+                style="border-right: 1px solid black;">
+                Credits
+            </button>
+            <button
+                id="closeButton"
+                class="button">
+                Close
+            </button>
+        </nav>
+        <div id="options" class="panel">
+            <h2 class="title">
+                Options
+            </h2>
+        </div>
+        <div id="info" class="panel hidden">
+            <h2 class="title">
+                Info
+            </h2>
+            <img src="assets/buttons/settings.png" title="Open Settings" />
+            Open settings window
+            <img src="assets/buttons/feed.png" title="Feed Slime" />
+            Feed your slime
+            <img src="assets/buttons/new.png" title="New Slime" />
+            Get a new slime
+            <br />
+            <br />
+            <br />
+            <br />
+            To Quit, press Ctrl (Cmd) + q
+        </div>
+        <div id="credits" class="panel hidden">
+            <h2 class="title">
+                Credits
+            </h2>
+            <br />
+            <h3>
+                Electron
+            </h3>
+                <a href="http://electron.atom.io/" target="_blank">http://electron.atom.io/</a>
+            <br />
+            <h3>
+                EaselJS
+            </h3>
+            Visit <a href="http://createjs.com/" target="_blank">http://createjs.com/</a> for documentation, updates and examples.
+            <br />
+            <br />
+            Copyright (c) 2011-2015 gskinner.com, inc.
+            <br />
+            <br />
+            Distributed under the terms of the MIT license.
+            http://www.opensource.org/licenses/mit-license.html
+            <br />
+            <br />
+            This notice shall be included in all copies or substantial portions of the Software.
+        </div>
+    </body>
+    <script>
+        require('./settings.js')
+    </script>
+</html>

@@ -1,9 +1,9 @@
 const {
     app,
-    Menu,
-    Tray,
+    BrowserWindow,
     ipcMain,
-    BrowserWindow
+    Menu,
+    shell
 } = require('electron');
 const Configstore = require('configstore');
 const defaultSlime = {
@@ -26,6 +26,7 @@ const path = require('path');
 const url = require('url');
 const settings = conf.all;
 let mainWindow;
+let settingsWindow;
 
 app.setName('Slime Buddy');
 
@@ -42,9 +43,15 @@ ipcMain.on('loadSlime', (e) => {
 ipcMain.on('resetSlime', (e) => {
     e.returnValue = Object.assign({}, settings, defaultSlime);
 });
+ipcMain.on('showSettings', (e) => {
+    createSettingsWindow();
+    e.returnValue = true;
+});
+ipcMain.on('hideSettings', (e) => {
+    settingsWindow.close();
+});
 
-function createWindow () {
-    // Create the browser window.
+function createMainWindow () {
     mainWindow = new BrowserWindow({
         width: 128,
         height: 158,
@@ -94,27 +101,57 @@ function createWindow () {
     }));
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
 }
 
-app.on('ready', createWindow)
+const createSettingsWindow = () => {
+    settingsWindow = new BrowserWindow({
+        width: 800,
+        height: 600,
+        alwaysOnTop: true,
+        frame: false,
+        resizable: false,
+        fullscreenable: false,
+        icon: 'assets/icons/icon.png',
+    });
+
+    settingsWindow.loadURL(url.format({
+        pathname: path.join(__dirname, 'settings.html'),
+        protocol: 'file:',
+        slashes: true,
+    }));
+
+    // Open the DevTools.
+    settingsWindow.webContents.openDevTools();
+
+    settingsWindow.webContents.on('new-window', (e, url) => {
+        e.preventDefault();
+        shell.openExternal(url);
+    });
+
+    settingsWindow.on('closed', () => {
+        settingsWindow = null;
+    });
+};
+
+app.on('ready', createMainWindow)
 
 app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
+  // if (process.platform !== 'darwin') {
     app.quit()
-  }
+  // }
 })
 
 app.on('activate', function () {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
-    createWindow()
+    createMainWindow()
   }
 })
