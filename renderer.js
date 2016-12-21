@@ -37,6 +37,16 @@ else if (today.getMonth() === 10 && today.getDate() === 31) {
 else if (today.getMonth() === 1 && today.getDate() === 1) {
     // holidayImages = '_newyear';
 }
+else if (today.getMonth() === 2 && today.getDate() === 14) {
+    // holidayImages = '_valentines';
+}
+else if (today.getMonth() === 7 && today.getDate() === 4) {
+    // holidayImages = '_july4';
+}
+else if (today.getMonth() === 11 && today.getDate() === 22) {
+	// TODO: Fix date check
+    // holidayImages = '_thanksgiving';
+}
 
 function poke() {
     if (!stats.doJump && slime.currentAnimation !== 'jump') {
