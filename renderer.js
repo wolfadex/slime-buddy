@@ -92,7 +92,6 @@ function loadBitmap(file, clickAction) {
 function init() {
     stage = new createjs.Stage('playground');
     stage.enableMouseOver();
-
     loadBitmap(`ground${holidayImages}`);
     loadBitmap('feed', feed);
     loadBitmap('new_slime', (e) => {
@@ -234,7 +233,6 @@ window.addEventListener('keydown', (e) => {
 });
 
 window.onbeforeunload = (e) => {
-  // save slime data
   ipcRenderer.sendSync('saveSlime', stats);
 };
 
