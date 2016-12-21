@@ -6,8 +6,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-	"ug": "uglifyjs main.js --screw-ie8 -c",
-    "build": "uglifyjs main.js renderer.js --screw-ie8 ; electron-packager ./ SlimeBuddy --all --out ~/Desktop/SlimeBuddy --overwrite --icon=./assets/icons/icon.icns"
+    "build": "electron-packager ./ SlimeBuddy --all --out ~/Desktop/SlimeBuddy --overwrite --icon=./assets/icons/icon.icns"
   },
   "keywords": [
     "slime",
