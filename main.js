@@ -95,7 +95,7 @@ function createMainWindow () {
     });
 
     mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'index.html'),
+        pathname: path.join(__dirname, 'game.html'),
         protocol: 'file:',
         slashes: true,
     }));
@@ -126,7 +126,7 @@ const createSettingsWindow = () => {
     }));
 
     // Open the DevTools.
-    settingsWindow.webContents.openDevTools();
+    // settingsWindow.webContents.openDevTools();
 
     settingsWindow.webContents.on('new-window', (e, url) => {
         e.preventDefault();
