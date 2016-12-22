@@ -6,8 +6,15 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager ./ SlimeBuddy --all --out ~/Desktop/SlimeBuddy --overwrite --icon=./assets/icons/icon.icns"
+    "build": "electron-packager ./ SlimeBuddy --all --out ./build/tmp --overwrite --icon=./assets/icons/icon.icns",
+	"pack": "build --dir",
+	"dist": "build"
   },
+  "build": {
+    "win": {
+      "icon": "assets/icons/icon.ico"
+    }
+},
   "keywords": [
     "slime",
     "toy",
@@ -16,6 +23,7 @@
   "author": "Wolfgang Schuster",
   "devDependencies": {
     "electron": "^1.4.1",
+    "electron-builder": "^10.9.3",
     "electron-packager": "^8.4.0"
   },
   "dependencies": {
