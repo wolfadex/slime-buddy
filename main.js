@@ -16,6 +16,7 @@ const defaultSlime = {
     doJump: false,
     doEat: false,
     dead: false,
+    color: null,
 };
 const defaultSettings = {
     x: 10,
