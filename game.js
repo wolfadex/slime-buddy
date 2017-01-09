@@ -117,9 +117,31 @@ function loadBitmap(file, clickAction, callback) {
 function init() {
     stage = new createjs.Stage('playground');
     stage.enableMouseOver();
+    stage.mouseMoveOutside = true;
     loadBitmap(`ground/${holidayTheme || 'default'}`);
-    loadBitmap('buttons/feed', feed, (button) => {
+    loadBitmap('buttons/feed', null, (button) => {
+    // loadBitmap('buttons/feed', feed, (button) => {
         feedButton = button;
+        feedButton.visible = true;
+        feedButton.on('pressmove', (e) => {
+            e.currentTarget.x = e.stageX  - 116;
+            e.currentTarget.y = e.stageY  - 35;
+            stage.update(); //much smoother because it refreshes the screen every pixel movement instead of the FPS set on the Ticker
+
+            if (onSlime(e.currentTarget.x, e.currentTarget.y)) {
+                e.currentTarget.alpha = 0.5;
+            }
+            else {
+                e.currentTarget.alpha = 1;
+            }
+        });
+        feedButton.on('pressup', (e) => {
+            onSlime(e.currentTarget.x, e.currentTarget.y) && feed();
+            e.currentTarget.alpha = 1;
+            e.currentTarget.x = 0;
+            e.currentTarget.y = 0;
+            stage.update(e);
+        });
     });
     loadBitmap('buttons/new', (e) => {
         stats = ipcRenderer.sendSync('resetSlime');
@@ -127,6 +149,7 @@ function init() {
         initSpriteSheet();
     }, (button) => {
         newSlimeButton = button;
+        newSlimeButton.visible = false;
     });
     loadBitmap('buttons/settings', (e) => {
         ipcRenderer.sendSync('showSettings');
@@ -137,6 +160,10 @@ function init() {
     }
 
     initSpriteSheet();
+}
+
+function onSlime(x, y) {
+    return y > 66 && y < 91 && x < -44 && x > -86;
 }
 
 function initSpriteSheet() {
@@ -173,8 +200,13 @@ function initSpriteSheet() {
 }
 
 function spriteSheetReady(sheet) {
-    feedButton.visible = true;
-    newSlimeButton.visible = false;
+    if (feedButton) {
+        feedButton.visible = true;
+    }
+
+    if (newSlimeButton) {
+        newSlimeButton.visible = false;
+    }
 
     if (slime) {
         slime.spriteSheet = sheet;
@@ -187,6 +219,8 @@ function spriteSheetReady(sheet) {
         stage.addChild(slime);
         createjs.Ticker.addEventListener('tick', handleTick);
     }
+
+    stage.setChildIndex(feedButton, stage.getNumChildren() - 1);
 }
 
 function handleTick(e) {
