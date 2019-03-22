@@ -1,0 +1,44 @@
+{
+  "name": "Slime Buddy",
+  "short_name": "Slime Buddy",
+  "description": "A little friend for you!",
+  "icons": [
+    {
+      "src": "assets/icons/icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon.ico",
+      "sizes": "1024x1024"
+    },
+    {
+      "src": "assets/icons/icon.icns",
+      "sizes": "1024x1024"
+    },
+    {
+      "src": "assets/icons/icon_512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon_256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon_192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon_128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "minimal-ui",
+  "theme_color": "#5682B8",
+  "background_color": "rgb(49, 49, 49)"
+}
