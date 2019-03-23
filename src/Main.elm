@@ -77,6 +77,8 @@ type SlimeColor
     = Blue
     | Red
     | Green
+    | Black
+    | White
 
 
 type State
@@ -228,6 +230,12 @@ decodeColor =
                 "Blue" ->
                     Decode.succeed Blue
 
+                "Black" ->
+                    Decode.succeed Black
+
+                "White" ->
+                    Decode.succeed White
+
                 c ->
                     Decode.fail <| "Unkown color: " ++ c
         )
@@ -366,6 +374,12 @@ encodeColor color =
             Blue ->
                 "Blue"
 
+            Black ->
+                "Black"
+
+            White ->
+                "White"
+
 
 encodeState : State -> Value
 encodeState state =
@@ -498,8 +512,10 @@ newSlime : ( Month, Int ) -> Generator Slime
 newSlime ( month, day ) =
     Random.weighted
         ( 40, Blue )
-        [ ( 30, Red )
-        , ( 30, Green )
+        [ ( 40, Red )
+        , ( 40, Green )
+        , ( 1, Black )
+        , ( 1, White )
         ]
         |> Random.andThen
             (\color ->
@@ -1005,20 +1021,30 @@ viewBackgroundImage =
 
 viewSlime : Slime -> Html Msg
 viewSlime slime =
+    let
+        slimeColor =
+            case slime.color of
+                Blue ->
+                    "blue"
+
+                Red ->
+                    "red"
+
+                Green ->
+                    "green"
+
+                Black ->
+                    "black"
+
+                White ->
+                    "white"
+    in
     Html.div
         [ Attrs.css
             [ Css.width <| Css.px 128
             , Css.height <| Css.px 128
             , Css.marginTop <| Css.px -128
-            , case slime.color of
-                Blue ->
-                    viewSlimeBlue
-
-                Red ->
-                    viewSlimeRed
-
-                Green ->
-                    viewSlimeGreen
+            , Css.backgroundImage <| Css.url ("./assets/slime/colors/" ++ slimeColor ++ ".png")
             , Css.backgroundSize <| Css.px (128 * 16)
             , Css.animationName <|
                 Anims.keyframes
@@ -1095,21 +1121,6 @@ viewSlime slime =
             ]
         ]
         []
-
-
-viewSlimeBlue : Style
-viewSlimeBlue =
-    Css.backgroundImage <| Css.url "./assets/slime/colors/blue.png"
-
-
-viewSlimeRed : Style
-viewSlimeRed =
-    Css.backgroundImage <| Css.url "./assets/slime/colors/red.png"
-
-
-viewSlimeGreen : Style
-viewSlimeGreen =
-    Css.backgroundImage <| Css.url "./assets/slime/colors/green.png"
 
 
 viewSlimeContent : Style
