@@ -5,7 +5,8 @@
   "description": "A little slime buddy",
   "scripts": {
     "dev": "webpack-dev-server",
-    "build": "webpack --env.prod=true"
+    "build": "webpack --env.prod=true",
+    "clean": "rm -rf dist"
   },
   "keywords": [
     "slime",
