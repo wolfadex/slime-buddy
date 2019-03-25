@@ -591,9 +591,6 @@ slimeTick slime delta timeSinceInteraction =
             if nextHunger >= hourToMilli 24 then
                 Hungry
 
-            else if nextTimeSincePlayedWith > minuteToMilli 20 then
-                Upset
-
             else if nextHunger <= hourToMilli -12 then
                 Upset
 
