@@ -1,4 +1,4 @@
-# Slime Buddy: [Play](https://hungry-rosalind-a14be2.netlify.com/)
+# Slime Buddy: [Play](https://slime-buddy.netlify.com/)
 
 ![Slime Buddy Screenshot](./src/assets/SlimeBuddyScreenshot.png)
 
