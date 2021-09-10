@@ -1,9 +1,8 @@
 node_modules
 elm-stuff
-build/tmp
 dist
+*elm.js
 
 npm-debug.log
-yarn-error.log
 
 .DS_Store

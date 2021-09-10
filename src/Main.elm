@@ -4,16 +4,15 @@ import Browser exposing (Document)
 import Browser.Events exposing (onAnimationFrameDelta)
 import Css exposing (Style)
 import Css.Animations as Anims
-import Debug exposing (log, toString)
 import Html.Styled as Html exposing (Html, toUnstyled)
 import Html.Styled.Attributes as Attrs
 import Html.Styled.Events as Events
 import Json.Decode as Decode exposing (Decoder, Value)
 import Json.Encode as Encode
 import Process
-import Random exposing (Generator, Seed)
+import Random exposing (Generator)
 import Task
-import Time exposing (Month(..), Posix)
+import Time exposing (Month(..))
 
 
 main : Program Value Model Msg
@@ -55,13 +54,6 @@ type alias Event =
     , day : Int
     , image : String
     }
-
-
-type Theme
-    = NoTheme
-    | Christmas
-    | Birthday
-    | NewYears
 
 
 type alias Slime =
@@ -173,72 +165,74 @@ decodeEvent =
 decodeMonth : Decoder Month
 decodeMonth =
     Decode.string
-        |> Decode.andThen (\str ->
-            case str of
-                "Jan" ->
-                    Decode.succeed Jan
+        |> Decode.andThen
+            (\str ->
+                case str of
+                    "Jan" ->
+                        Decode.succeed Jan
 
-                "Feb" ->
-                    Decode.succeed Feb
+                    "Feb" ->
+                        Decode.succeed Feb
 
-                "Mar" ->
-                    Decode.succeed Mar
+                    "Mar" ->
+                        Decode.succeed Mar
 
-                "Apr" ->
-                    Decode.succeed Apr
+                    "Apr" ->
+                        Decode.succeed Apr
 
-                "May" ->
-                    Decode.succeed May
+                    "May" ->
+                        Decode.succeed May
 
-                "Jun" ->
-                    Decode.succeed Jun
+                    "Jun" ->
+                        Decode.succeed Jun
 
-                "Jul" ->
-                    Decode.succeed Jul
+                    "Jul" ->
+                        Decode.succeed Jul
 
-                "Aug" ->
-                    Decode.succeed Aug
+                    "Aug" ->
+                        Decode.succeed Aug
 
-                "Sep" ->
-                    Decode.succeed Sep
+                    "Sep" ->
+                        Decode.succeed Sep
 
-                "Oct" ->
-                    Decode.succeed Oct
+                    "Oct" ->
+                        Decode.succeed Oct
 
-                "Nov" ->
-                    Decode.succeed Nov
+                    "Nov" ->
+                        Decode.succeed Nov
 
-                "Dec" ->
-                    Decode.succeed Dec
+                    "Dec" ->
+                        Decode.succeed Dec
 
-                m ->
-                    Decode.fail <| "Unkown month: " ++ m
-        )
+                    m ->
+                        Decode.fail <| "Unkown month: " ++ m
+            )
 
 
 decodeColor : Decoder SlimeColor
 decodeColor =
     Decode.string
-        |> Decode.andThen (\str ->
-            case str of
-                "Red" ->
-                    Decode.succeed Red
+        |> Decode.andThen
+            (\str ->
+                case str of
+                    "Red" ->
+                        Decode.succeed Red
 
-                "Green" ->
-                    Decode.succeed Green
+                    "Green" ->
+                        Decode.succeed Green
 
-                "Blue" ->
-                    Decode.succeed Blue
+                    "Blue" ->
+                        Decode.succeed Blue
 
-                "Black" ->
-                    Decode.succeed Black
+                    "Black" ->
+                        Decode.succeed Black
 
-                "White" ->
-                    Decode.succeed White
+                    "White" ->
+                        Decode.succeed White
 
-                c ->
-                    Decode.fail <| "Unkown color: " ++ c
-        )
+                    c ->
+                        Decode.fail <| "Unkown color: " ++ c
+            )
 
 
 decodeState : Decoder State
@@ -246,29 +240,30 @@ decodeState =
     Decode.oneOf
         [ Decode.null Dead
         , Decode.string
-            |> Decode.andThen (\str ->
-                case str of
-                    "Content" ->
-                        Decode.succeed <| Alive { mood = Content, action = Sitting }
+            |> Decode.andThen
+                (\str ->
+                    case str of
+                        "Content" ->
+                            Decode.succeed <| Alive { mood = Content, action = Sitting }
 
-                    "Shocked" ->
-                        Decode.succeed <| Alive { mood = Shocked, action = Sitting }
+                        "Shocked" ->
+                            Decode.succeed <| Alive { mood = Shocked, action = Sitting }
 
-                    "Confused" ->
-                        Decode.succeed <| Alive { mood = Confused, action = Sitting }
+                        "Confused" ->
+                            Decode.succeed <| Alive { mood = Confused, action = Sitting }
 
-                    "Happy" ->
-                        Decode.succeed <| Alive { mood = Happy, action = Sitting }
+                        "Happy" ->
+                            Decode.succeed <| Alive { mood = Happy, action = Sitting }
 
-                    "Hungry" ->
-                        Decode.succeed <| Alive { mood = Hungry, action = Sitting }
+                        "Hungry" ->
+                            Decode.succeed <| Alive { mood = Hungry, action = Sitting }
 
-                    "Upset" ->
-                        Decode.succeed <| Alive { mood = Upset, action = Sitting }
-                    
-                    m ->
-                        Decode.fail <| "Unkown mood: " ++ m
-            )
+                        "Upset" ->
+                            Decode.succeed <| Alive { mood = Upset, action = Sitting }
+
+                        m ->
+                            Decode.fail <| "Unkown mood: " ++ m
+                )
         ]
 
 
@@ -285,7 +280,7 @@ getToday =
 
 
 subscriptions : Model -> Sub Msg
-subscriptions model =
+subscriptions _ =
     Sub.batch
         [ onAnimationFrameDelta Tick
         , Time.every (minuteToMilli 1) (\_ -> SaveSlime)
@@ -605,7 +600,7 @@ slimeTick slime delta timeSinceInteraction =
                 Dead ->
                     Dead
 
-                Alive { mood, action } ->
+                Alive { action } ->
                     if nextHunger >= hourToMilli 48 then
                         Dead
 
@@ -733,11 +728,6 @@ minuteToMilli =
     (*) 60000
 
 
-secondsToMillit : Float -> Float
-secondsToMillit =
-    (*) 1000
-
-
 
 ---- VIEW ----
 
@@ -848,104 +838,95 @@ viewActions slime =
 
 viewFoodButton : Maybe Slime -> Html Msg
 viewFoodButton slime =
-    let
-        canClick =
-            case slime of
-                Nothing ->
-                    False
-
-                Just { state } ->
+    pictureButton
+        { onClick =
+            Maybe.andThen
+                (\{ state } ->
                     case state of
                         Dead ->
-                            False
+                            Nothing
 
                         Alive { action } ->
                             case action of
                                 Sitting ->
-                                    True
+                                    Just ClickedFood
 
                                 Sleeping _ ->
-                                    True
+                                    Just ClickedFood
 
                                 _ ->
-                                    False
-    in
-    Html.img
-        [ Attrs.css
-            [ Css.position Css.absolute
-            , Css.height <| Css.px 32
-            , Css.width <| Css.px 32
-            , Css.bottom <| Css.px 0
-            , Css.right <| Css.px 32
-            , Css.cursor <|
-                if canClick then
-                    Css.pointer
-
-                else
-                    Css.notAllowed
-            , Css.opacity <|
-                Css.num <|
-                    if canClick then
-                        1
-
-                    else
-                        0.5
-            ]
-        , Attrs.src "./assets/buttons/feed_large.png"
-        , Events.onClick <|
-            if canClick then
-                ClickedFood
-
-            else
-                NoOp
-        ]
-        []
+                                    Nothing
+                )
+                slime
+        , imageUri = "./assets/buttons/feed_large.png"
+        , offset = 32
+        , label = "Feed Slime"
+        }
 
 
 viewEggButton : Maybe Slime -> Html Msg
 viewEggButton slime =
-    let
-        canClick =
+    pictureButton
+        { onClick =
             case slime of
                 Nothing ->
-                    True
+                    Just ClickedEgg
 
                 Just { state } ->
                     case state of
                         Dead ->
-                            True
+                            Just ClickedEgg
 
                         Alive _ ->
-                            False
-    in
-    Html.img
+                            Nothing
+        , imageUri = "./assets/buttons/new_large.png"
+        , offset = 0
+        , label = "New Slime"
+        }
+
+
+pictureButton :
+    { onClick : Maybe msg
+    , imageUri : String
+    , offset : Float
+    , label : String
+    }
+    -> Html msg
+pictureButton { onClick, imageUri, offset, label } =
+    Html.button
         [ Attrs.css
             [ Css.position Css.absolute
             , Css.height <| Css.px 32
             , Css.width <| Css.px 32
             , Css.bottom <| Css.px 0
-            , Css.right <| Css.px 0
+            , Css.right <| Css.px offset
             , Css.cursor <|
-                if canClick then
-                    Css.pointer
+                case onClick of
+                    Just _ ->
+                        Css.pointer
 
-                else
-                    Css.notAllowed
+                    Nothing ->
+                        Css.notAllowed
             , Css.opacity <|
                 Css.num <|
-                    if canClick then
-                        1
+                    case onClick of
+                        Just _ ->
+                            1
 
-                    else
-                        0.5
+                        Nothing ->
+                            0.5
+            , Css.borderStyle Css.none
+            , Css.backgroundColor (Css.rgba 0 0 0 0)
+            , Css.backgroundImage (Css.url imageUri)
+            , Css.backgroundSize (Css.px 32)
             ]
-        , Attrs.src "./assets/buttons/new_large.png"
-        , Events.onClick <|
-            if canClick then
-                ClickedEgg
+        , Attrs.attribute "aria-label" label
+        , case onClick of
+            Nothing ->
+                Attrs.disabled True
 
-            else
-                NoOp
+            Just handler ->
+                Events.onClick handler
         ]
         []
 
@@ -1206,7 +1187,7 @@ viewSlimeJump6 =
 
 
 viewSlimeTheme : Model -> String -> Html Msg
-viewSlimeTheme ({ events } as model) theme =
+viewSlimeTheme model theme =
     Html.div
         [ Attrs.css
             [ Css.width <| Css.px 128
