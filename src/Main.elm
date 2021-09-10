@@ -4,16 +4,15 @@ import Browser exposing (Document)
 import Browser.Events exposing (onAnimationFrameDelta)
 import Css exposing (Style)
 import Css.Animations as Anims
-import Debug exposing (log, toString)
 import Html.Styled as Html exposing (Html, toUnstyled)
 import Html.Styled.Attributes as Attrs
 import Html.Styled.Events as Events
 import Json.Decode as Decode exposing (Decoder, Value)
 import Json.Encode as Encode
 import Process
-import Random exposing (Generator, Seed)
+import Random exposing (Generator)
 import Task
-import Time exposing (Month(..), Posix)
+import Time exposing (Month(..))
 
 
 main : Program Value Model Msg
@@ -55,13 +54,6 @@ type alias Event =
     , day : Int
     , image : String
     }
-
-
-type Theme
-    = NoTheme
-    | Christmas
-    | Birthday
-    | NewYears
 
 
 type alias Slime =
@@ -288,7 +280,7 @@ getToday =
 
 
 subscriptions : Model -> Sub Msg
-subscriptions model =
+subscriptions _ =
     Sub.batch
         [ onAnimationFrameDelta Tick
         , Time.every (minuteToMilli 1) (\_ -> SaveSlime)
@@ -608,7 +600,7 @@ slimeTick slime delta timeSinceInteraction =
                 Dead ->
                     Dead
 
-                Alive { mood, action } ->
+                Alive { action } ->
                     if nextHunger >= hourToMilli 48 then
                         Dead
 
@@ -736,11 +728,6 @@ minuteToMilli =
     (*) 60000
 
 
-secondsToMillit : Float -> Float
-secondsToMillit =
-    (*) 1000
-
-
 
 ---- VIEW ----
 
@@ -851,28 +838,6 @@ viewActions slime =
 
 viewFoodButton : Maybe Slime -> Html Msg
 viewFoodButton slime =
-    let
-        canClick =
-            case slime of
-                Nothing ->
-                    False
-
-                Just { state } ->
-                    case state of
-                        Dead ->
-                            False
-
-                        Alive { action } ->
-                            case action of
-                                Sitting ->
-                                    True
-
-                                Sleeping _ ->
-                                    True
-
-                                _ ->
-                                    False
-    in
     pictureButton
         { onClick =
             Maybe.andThen
@@ -1222,7 +1187,7 @@ viewSlimeJump6 =
 
 
 viewSlimeTheme : Model -> String -> Html Msg
-viewSlimeTheme ({ events } as model) theme =
+viewSlimeTheme model theme =
     Html.div
         [ Attrs.css
             [ Css.width <| Css.px 128
